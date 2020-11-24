@@ -1,0 +1,22 @@
+---
+- name: upgrade all packages
+  become: True
+  apt:
+    name: '*'
+    state: latest
+    autoclean: yes
+    cache_valid_time: 86400
+
+- name: Ensure all required packages are installed
+  become: True
+  apt:
+    name: '{{ item }}'
+    state: latest
+    autoclean: yes
+    cache_valid_time: 86400
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common

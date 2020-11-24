@@ -1,0 +1,6 @@
+---
+- name: My RPi setup
+  hosts: all
+
+  roles:
+    - docker
