@@ -2,5 +2,8 @@
 - name: My RPi setup
   hosts: all
 
+  pre_tasks:
+    - include_tasks: tasks/pre-tasks.yml
+
   roles:
     - docker

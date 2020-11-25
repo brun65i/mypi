@@ -15,3 +15,22 @@
     update_cache: yes
     mode: 0644
     validate_certs: yes
+
+- name: Install Docker-CE
+  become: True
+  apt:
+    name: '{{ item }}'
+    state: latest
+    autoclean: yes
+    cache_valid_time: 86400
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+
+- name: Ensure pi user is in Docker group
+  become: True
+  user:
+    name: pi
+    groups: docker
+    append: yes
