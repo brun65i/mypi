@@ -34,3 +34,9 @@
     name: pi
     groups: docker
     append: yes
+
+- name: Ensure Docker dependensies are installed
+  ansible.builtin.pip:
+    name:
+      - docker
+      - docker-compose

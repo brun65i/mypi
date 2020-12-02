@@ -1,0 +1,40 @@
+---
+- name: Make sure destination directory is present
+  file:
+      path: "{{ docker_compose_dir }}/pihole"
+      state: directory
+      mode: "0770"
+
+- name: Copy compose source templates
+  template:
+    src: containers/pihole/docker-compose.yml
+    dest: "{{ docker_compose_dir }}/pihole/"
+    mode: 0600
+
+- name: Tear down existing services
+  community.general.docker_compose:
+    project_src: "{{ docker_compose_dir }}/pihole"
+    state: absent
+
+- name: Create and start services
+  community.general.docker_compose:
+    project_src: "{{ docker_compose_dir }}/pihole"
+  register: output
+
+- name: Debug output
+  ansible.builtin.debug:
+    var: output
+
+- name: Run `docker-compose up` again
+  community.general.docker_compose:
+    project_src: "{{ docker_compose_dir }}/pihole"
+    build: no
+  register: output
+
+- name: Debug output
+  ansible.builtin.debug:
+    var: output
+
+- name: Confirm nothing chaged after subsequent run
+  ansible.builtin.assert:
+    that: "not output.changed"
