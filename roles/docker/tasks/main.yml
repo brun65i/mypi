@@ -40,3 +40,9 @@
     name:
       - docker
       - docker-compose
+
+- name: Create a network with custom IPv4 IPAM config
+  community.general.docker_network:
+    name: backend
+    ipam_config:
+      - subnet: 172.20.0.0/16

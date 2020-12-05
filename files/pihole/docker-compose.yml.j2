@@ -9,11 +9,17 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - "67:67/udp"
+    #  - "67:67/udp"
       - "80:80/tcp"
       - "443:443/tcp"
+    dns:
+      - 127.0.0.1
+      - 8.8.8.8
     environment:
       TZ: 'Australia/Adelaide'
+      #ServerIP: "{{ pi_ip_address }}"
+      VIRTUAL_HOST: pihole.lan
+      DNSMASQ_LISTENING: all
       # WEBPASSWORD: 'set a secure password here or it will be random'
     # Volumes store your data between container upgrades
     volumes:
@@ -23,4 +29,22 @@ services:
     #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
     cap_add:
       - NET_ADMIN
+    depends_on:
+      - dhcphelper
+    networks:
+      backend:
+        ipv4_address: '{{ pihole_ip_address }}'
     restart: unless-stopped
+
+  dhcphelper:
+    container_name: dhcphelper
+    build: ./dhcp-helper
+    restart: unless-stopped
+    network_mode: "host"
+    command: -s '{{ pihole_ip_address }}'
+    cap_add:
+      - NET_ADMIN
+
+networks:
+  backend:
+    external: true

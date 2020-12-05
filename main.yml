@@ -2,6 +2,9 @@
 - name: My RPi setup
   hosts: all
 
+  vars:
+    docker_compose_dir: /home/pi/containers
+
   pre_tasks:
     - include_tasks: tasks/pre-tasks.yml
 

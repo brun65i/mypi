@@ -1,20 +1,41 @@
 ---
-- name: Make sure destination directory is present
+- name: Make sure pihole directories is present
+  become: True
   file:
-      path: "{{ docker_compose_dir }}/pihole"
-      state: directory
-      mode: "0770"
+    path: "{{ docker_compose_dir }}/{{ item }}"
+    state: directory
+    mode: "0755"
+    owner: pi
+    group: pi
+  loop:
+    - pihole
+    - pihole/etc-dnsmasq.d
+    - pihole/dhcp-helper
 
 - name: Copy compose source templates
   template:
-    src: containers/pihole/docker-compose.yml
-    dest: "{{ docker_compose_dir }}/pihole/"
+    src: files/pihole/docker-compose.yml.j2
+    dest: "{{ docker_compose_dir }}/pihole/docker-compose.yml"
     mode: 0600
 
 - name: Tear down existing services
   community.general.docker_compose:
     project_src: "{{ docker_compose_dir }}/pihole"
     state: absent
+
+- name: Copy Dockerfile
+  copy:
+    src: files/pihole/Dockerfile
+    dest: "{{ docker_compose_dir }}/pihole/dhcp-helper"
+    mode: 0600
+
+- name: Copy DHCP configuration files
+  template:
+    src: "{{ item }}"
+    dest: "{{ docker_compose_dir }}/pihole/etc-dnsmasq.d/{{ item | basename | regex_replace('\\.j2$', '') }}"
+    mode: 0644
+  with_fileglob:
+    - pihole/conf/*.j2
 
 - name: Create and start services
   community.general.docker_compose:
