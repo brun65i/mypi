@@ -20,3 +20,5 @@
     - curl
     - gnupg-agent
     - software-properties-common
+    - vim
+    - python3-pip

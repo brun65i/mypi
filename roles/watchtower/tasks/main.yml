@@ -1,0 +1,42 @@
+---
+- name: Make sure pihole directories is present
+  become: True
+  file:
+    path: "{{ docker_compose_dir }}/watchtower"
+    state: directory
+    mode: "0755"
+    owner: pi
+    group: pi
+
+- name: Copy compose source templates
+  template:
+    src: files/watchtower/docker-compose.yml.j2
+    dest: "{{ docker_compose_dir }}/watchtower/docker-compose.yml"
+    mode: 0600
+
+- name: Tear down existing services
+  community.general.docker_compose:
+    project_src: "{{ docker_compose_dir }}/watchtower"
+    state: absent
+
+- name: Create and start services
+  community.general.docker_compose:
+    project_src: "{{ docker_compose_dir }}/watchtower"
+  register: output
+
+- name: Debug output
+  ansible.builtin.debug:
+    var: output
+
+- name: Run `docker-compose up` again
+  community.general.docker_compose:
+    project_src: "{{ docker_compose_dir }}/watchtower"
+  register: output
+
+- name: Debug output
+  ansible.builtin.debug:
+    var: output
+
+- name: Confirm nothing chaged after subsequent run
+  ansible.builtin.assert:
+    that: "not output.changed"

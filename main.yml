@@ -11,3 +11,4 @@
   roles:
     - docker
     - {name: pihole, tags: [ 'pihole' ]}
+    - {name: watchtower, tags: [ 'watchtower' ]}
