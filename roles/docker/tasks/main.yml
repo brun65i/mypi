@@ -27,6 +27,7 @@
     - docker-ce
     - docker-ce-cli
     - containerd.io
+#TODO ignore error, reboot and try again
 
 - name: Ensure pi user is in Docker group
   become: True
@@ -34,6 +35,9 @@
     name: pi
     groups: docker
     append: yes
+#TODO add the following as a handler after the change
+#- name: reset ssh connection
+#  meta: reset_connection
 
 - name: Ensure Docker dependensies are installed
   ansible.builtin.pip:

@@ -1,3 +1,6 @@
 ---
-pi_ip_address: 10.0.0.250
+pi_ip_address: 192.168.65.250
 pihole_ip_address: 172.20.0.2
+dhcp_gw: 192.168.65.138
+dhcp_start: 192.168.65.51
+dhcp_end: 192.168.65.151

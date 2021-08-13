@@ -11,6 +11,7 @@
     - pihole
     - pihole/etc-dnsmasq.d
     - pihole/dhcp-helper
+    - pihole/etc-pihole
 
 - name: Copy compose source templates
   template:
@@ -29,13 +30,23 @@
     dest: "{{ docker_compose_dir }}/pihole/dhcp-helper"
     mode: 0600
 
+- name: Copy piHole configuration files
+  template:
+    src: "{{ item }}"
+    dest: "{{ docker_compose_dir }}/pihole/etc-pihole/{{ item | basename | regex_replace('\\.j2$', '') }}"
+    mode: 0644
+  with_fileglob:
+    - pihole/conf/setupVars.conf.j2
+
 - name: Copy DHCP configuration files
   template:
     src: "{{ item }}"
     dest: "{{ docker_compose_dir }}/pihole/etc-dnsmasq.d/{{ item | basename | regex_replace('\\.j2$', '') }}"
     mode: 0644
   with_fileglob:
-    - pihole/conf/*.j2
+    - pihole/conf/07-dhcp-options.conf.j2
+    - pihole/conf/02-pihole-dhcp.conf.j2
+    - pihole/conf/01-pihole.conf.j2
 
 - name: Create and start services
   community.general.docker_compose:
