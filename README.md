@@ -35,6 +35,8 @@ The following still needs to be implemented in the playbook.
 sudo sqlite3 /home/pi/containers/pihole/etc-pihole/gravity.db "INSERT OR IGNORE INTO adlist (address, enabled, comment) VALUES ('https://blocklistproject.github.io/Lists/porn.txt', 1, 'PORN');"
 sudo sqlite3 /home/pi/containers/pihole/etc-pihole/gravity.db "INSERT OR IGNORE INTO adlist (address, enabled, comment) VALUES ('https://blocklistproject.github.io/Lists/ads.txt', 1, 'ADS');"
 sudo sqlite3 /home/pi/containers/pihole/etc-pihole/gravity.db "INSERT OR IGNORE INTO adlist (address, enabled, comment) VALUES ('https://blocklistproject.github.io/Lists/tracking.txt', 1, 'TRACKING');"
+sudo sqlite3 /home/pi/containers/pihole/etc-pihole/gravity.db "INSERT OR IGNORE INTO adlist (address, enabled, comment) VALUES ('https://v.firebog.net/hosts/AdguardDNS.txt', 1, 'Adguard_ADS');"
+sudo sqlite3 /home/pi/containers/pihole/etc-pihole/gravity.db "INSERT OR IGNORE INTO adlist (address, enabled, comment) VALUES ('https://v.firebog.net/hosts/Easylist.txt', 1, 'EasyList_ADS');"
 
 # To download new lists we need to update gravity list.
 docker exec pihole pihole -g
